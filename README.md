@@ -25,6 +25,9 @@ struct bird = {name:string, age:int}
     age >= 0    => Young bird
     _           => Imaginary bird
 
+-- Old bird means Old {name, age}
+-- bird in `Old bird` is a shorthand for the entry constructor (more on this below)
+
 struct factorial = {x:int}
     x < 0               => Error {}
     x == 0 || x == 1    => 1
@@ -54,6 +57,8 @@ struct an_old_bird = bird {"Hai", 100}
 ```
 
 A _qualifier_ in zoar is a way to describe a struct. You might have a `Big Red {5,4,6}` or `{Green "apple", Red "banana"}`. While you could potentially encode qualifiers inside the struct itself like having a field called `qualifier:string`, it offers a distinct struct in typechecking.
+
+Qualifiers can be made on the fly within a struct definition and those qualifiers are scoped to that struct definition and so accessing `Poodle` of `dog` is done through `dog.Poodle`. So if `cat` also used `Poodle` inside its definition, `dog.Poodle` and `cat.Poodle` would then be treated different.
 
 Further inspecting the snippet above we see `Poodle {name, ...} = d` which is called a _bind_ statement in zoar. A bind is an expression that can either succeed or fail in capturing the value of the right-hand-side. It is a destructuring which includes the qualifier in the destructuring.
 
