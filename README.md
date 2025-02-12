@@ -146,6 +146,42 @@ greet_person_then_give_double_age :: {name:string, age:int, prefix:Mr {} | Ms {}
 
 As you can see, the `mul`, `add`, `sub` are themselves structs so it is reflected in the signature that the transformation passes through this.
 
+When we have multiple constructors as such below,
+
+```haskell
+
+struct beverage = {name:string, has_ice:bool}
+
+struct remove_ice = {{name, _}: beverage} => beverage {name, false}
+
+struct cook =
+    | WithHeat {s: beverage}
+        s.has_ice => Warm {s}
+        !s.has_ice => Evaporated s
+    | WithCold {s: beverage}
+        s.has_ice => no_ice = remove_ice {s} => WithCold {no_ice}
+        !s.has_ice => Cold {s}
+```
+
+Here are the signatures of the above structs
+
+```haskell
+
+beverage :: {string, bool}
+
+remove_ice :: {beverage} -> beverage
+
+cook ::
+    | WithHeat {beverage}
+        -> Warm {beverage}
+        -> Evaporated beverage
+    | WithCold {beverage}
+        -> remove_ice -> beverage -> WithCold {beverage}
+        -> Cold {beverage}
+```
+
+Notice `Warm {s}` gives `Warm {beverage}` while `Evaporated s` gives `Evaporated beverage` in their signature. The signatures track the journey of the struct as it transform from one struct to another. Remember that "functions" are structs as well in zoar. And so, beverage above could become a `remove_ice` struct which then becomes a `beverage` struct which is then qualified with `WithCold`.
+
 ## Qualifiers have no order
 
 Qualifiers can come in any order, and are "idempotent" so the same qualifier counts only as 1. So all of the following `thiing_i` are the same
