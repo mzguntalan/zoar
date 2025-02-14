@@ -238,3 +238,44 @@ struct daisy_1 = {} => {name:string="daisy"} => {c=cat {daisy_1}} => can_be_hung
 ```
 
 And so we can call `daisy_1 {}` and get back the same value as before, without having to do `daisy_1 {"daisy"}`.
+
+# Grammar
+
+[This might make the above syntax obsolete].
+
+```haskell
+program :: struct_def -> struct_def
+struct_def :: "struct" -> varname -> "=" -> constructor_branch -> "|" -|
+                                            ^---------------------------
+
+constructor_branch =    |-> non_transforming
+                        |-> directly_transforming
+                        |-> branched_transforming
+
+non_transforming = (qualifier)
+                                -> struct_name
+                                -> struct_construction
+
+directly_transforming = non_transforming -> "=>" -> constructor_branch
+
+branched_transforming = non_transforming -> "\n" -> "\t"^n -> captured_transform
+
+captured_transform = capture -> "=>" -> constructor_branch
+
+capture = |-> varname -> "=" -> struct_construction
+          |-> struct_construction
+
+qualifier = upper -> lower -|
+            ^----|---^------|
+
+varname = lower -|
+        ^--------|
+
+struct_name = varname
+
+struct_construction = struct_name -> ("." -> qualifier)
+                                                        -> struct_name
+                                                        -> struct_construction
+                                                        -> bare_struct
+
+```
