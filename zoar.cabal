@@ -5,13 +5,13 @@ cabal-version: 2.2
 -- see: https://github.com/sol/hpack
 
 name:           zoar
-version:        0.1.0.0
+version:        0.0.0.1
 description:    Please see the README on GitHub at <https://github.com/githubuser/zoar#readme>
 homepage:       https://github.com/githubuser/zoar#readme
 bug-reports:    https://github.com/githubuser/zoar/issues
-author:         Author name here
-maintainer:     example@example.com
-copyright:      2025 Author name here
+author:         mzguntalan
+maintainer:     mzguntalan@gmail.com
+copyright:      2025 mzguntalan
 license:        BSD-3-Clause
 license-file:   LICENSE
 build-type:     Simple
